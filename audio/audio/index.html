@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WaveSurfer Example</title>
+    <!-- Include WaveSurfer.js via CDN -->
+    <script src="https://unpkg.com/wavesurfer.js"></script>
+    <!-- Link your custom CSS file -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Container for the audio waveform -->
+    <div id="waveform"></div>
+    <div
+      class="w-full flex justify-between items-center py-2 content-action px-10"
+    >
+      <div class="title w-[33.3%]">
+        <div class="flex">
+          <div class="min-w-[100px]">
+            <img scr="access/eng_img.png" alt="img" />
+          </div>
+          <div class="w-[40%]">
+            <div class="marquee">
+              <p>this is a text</p>
+            </div>
+            <p class="">Description...</p>
+            <p class="">Description...</p>
+          </div>
+        </div>
+      </div>
+      <div id="controlsContainer" class="w-[33.3%]">
+        <div class="flex justify-center">
+          <!-- forward Button -->
+          <button id="forwardButton" class="mx-6">
+            <span class="material-symbols-outlined"> replay_10 </span>
+          </button>
+          <!-- play button -->
+          <button id="playButton" class="mx-6">
+            <span class="material-symbols-outlined text-[34px]">
+              play_arrow
+            </span>
+          </button>
+          <!-- rewind Button -->
+          <button id="rewindButton" class="mx-6">
+            <span class="material-symbols-outlined"> forward_10 </span>
+          </button>
+
+          <div class="flex items-center relative ms-5">
+            <button
+              id="speedButton"
+              class="rounded-[20px] border-[1px] px-3 active:bg-red-500"
+            ></button>
+            <div
+              class="absolute top-[0px] translate-y-[-100%] translate-x-[-50%] z-50 bg-white p-5 rounded-2xl box-speed d-none ms-5"
+              id="speedContent"
+            >
+              <div id="speedList">
+                <span class="cursor-pointer" data="0.5">0.5</span
+                ><span class="cursor-pointer" data="1.0">1.0</span
+                ><span class="cursor-pointer" data="1.2">1.2</span
+                ><span class="cursor-pointer" data="1.5">1.5</span
+                ><span class="cursor-pointer" data="2.0">2.0</span
+                ><span class="cursor-pointer" data="3.0">3.0</span>
+              </div>
+              <div class="content-speed flex justify-around items-center py-4">
+                <div>
+                  <button
+                    class="border-[1px] border-[#1A73E8] rounded-[50%] flex items-center"
+                    id="speedDownButton"
+                  >
+                    <span
+                      class="material-symbols-outlined leading-[16px] text-[#1A73E8] text-[16px]"
+                    >
+                      remove
+                    </span>
+                  </button>
+                </div>
+                <div>
+                  <p id="speed" class="text-[32px]">1x</p>
+                </div>
+                <div>
+                  <button
+                    class="border-[1px] border-[#1A73E8] rounded-[50%] flex items-center"
+                    id="speedUpButton"
+                  >
+                    <span
+                      class="material-symbols-outlined leading-[16px] text-[#1A73E8] text-[16px]"
+                    >
+                      add
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div class="flex justify-end items-center">
+                <button
+                  class="flex items-center"
+                  onclick="document.querySelector('#speedContent').style.display=`none`"
+                >
+                  <span class="material-symbols-outlined p1-2"> done </span>
+                  Xong
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Volume control -->
+      <div class="w-[33.3%]">
+        <div class="flex items-center justify-end">
+          <div id="volumeControl" class="flex items-center">
+            <label id="volume_label" for="volume"
+              ><span class="material-symbols-outlined relative bottom-[-3px]">
+                volume_up
+              </span></label
+            >
+            <input
+              type="range"
+              id="volume"
+              name="volume"
+              min="0"
+              max="1"
+              step="0.01"
+              value="1"
+            />
+          </div>
+          <!-- Rewind and Fast Forward buttons -->
+
+          <div class="flex px-2">
+            <div id="timeline">00:00</div>
+            <p>/</p>
+            <div id="totalDuration"></div>
+
+            <!-- Timeline -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Your custom JavaScript -->
+    <script src="js/main.js"></script>
+  </body>
+</html>
