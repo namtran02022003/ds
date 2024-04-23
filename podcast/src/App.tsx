@@ -1,7 +1,9 @@
 import { AssemblyAI } from "assemblyai";
-import { useEffect } from "react";
-import { startApp } from "./assets/index.js";
+import { useEffect, useState } from "react";
+import { startApp } from "./assets/index.ts";
 import "./App.css";
+// import { MOCK_DATAS } from "./constans/index.ts";
+import { RESPONSE_DATA_TYPE } from "./types/index.ts";
 export default function App() {
   const client = new AssemblyAI({
     apiKey: "0406b3e1645d45fb876abaceee9a3ba5",
@@ -15,20 +17,36 @@ export default function App() {
     speaker_labels: true,
   };
 
-  const run = async () => {
-    const transcript = await client.transcripts.transcribe(params);
-    console.log(transcript.text);
-
-    for (const utterance of transcript.utterances!) {
-      console.log(`Speaker ${utterance.speaker}: ${utterance.text}`);
-    }
-  };
-
-  // run();
+  const [datas, setDatas] = useState<RESPONSE_DATA_TYPE[]>([]);
   useEffect(() => {
-    startApp();
+    const run = async () => {
+      const transcript = await client.transcripts.transcribe(params);
+      let value = [];
+      let index = 1;
+      for (const utterance of transcript.utterances!) {
+        value.push({
+          position: index,
+          content: utterance.text,
+          id: index,
+          timeStart: +utterance.start
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, "."),
+          timeEnd: +utterance.end
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, "."),
+        });
+        ++index;
+      }
+      setDatas(value);
+      setTimeout(() => {
+        startApp(value);
+      }, 1000);
+    };
+    run();
   }, []);
-  return (
+  return !datas.length ? (
+    <></>
+  ) : (
     <main className="container">
       <div className="message"></div>
       <h1 className="fs-5 mb-3">1. First snowfall (Listen and Read)</h1>
@@ -174,7 +192,7 @@ export default function App() {
                     id="js-audio"
                   >
                     <source
-                      src="https://dailydictation.com/upload/general-english/1-first-snowfall-2019-03-14-04-19-38/0-1-first-snowfall.mp3"
+                      src="https://storage.googleapis.com/aai-web-samples/5_common_sports_injuries.mp3"
                       type="audio/mpeg"
                     />
                     Your browser does not support the audio element.
@@ -232,468 +250,32 @@ export default function App() {
                 Show transcript
               </button>
               <div className="js-transcript d-none">
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-1"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="1"
-                    data-position="1"
-                    id="challenge-1-content"
-                  >
-                    Today is November 26th.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-1-translation"
-                    data-original-text="Today is November 26th."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-2"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="2"
-                    data-position="2"
-                    id="challenge-2-content"
-                  >
-                    It snowed all day today.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-2-translation"
-                    data-original-text="It snowed all day today."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-3"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="3"
-                    data-position="3"
-                    id="challenge-3-content"
-                  >
-                    The snow is beautiful.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-3-translation"
-                    data-original-text="The snow is beautiful."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-4"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="4"
-                    data-position="4"
-                    id="challenge-4-content"
-                  >
-                    The snow finally stopped.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-4-translation"
-                    data-original-text="The snow finally stopped."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-5"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="5"
-                    data-position="5"
-                    id="challenge-5-content"
-                  >
-                    My sister and I are excited.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-5-translation"
-                    data-original-text="My sister and I are excited."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-6"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="6"
-                    data-position="6"
-                    id="challenge-6-content"
-                  >
-                    My mom doesn&#039;t like the snow.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-6-translation"
-                    data-original-text="My mom doesn&#039;t like the snow."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-7"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="7"
-                    data-position="7"
-                    id="challenge-7-content"
-                  >
-                    My mom has to shovel the driveway.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-7-translation"
-                    data-original-text="My mom has to shovel the driveway."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-8"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="8"
-                    data-position="8"
-                    id="challenge-8-content"
-                  >
-                    My sister and I get to play.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-8-translation"
-                    data-original-text="My sister and I get to play."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-9"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="9"
-                    data-position="9"
-                    id="challenge-9-content"
-                  >
-                    I put on my hat and mittens.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-9-translation"
-                    data-original-text="I put on my hat and mittens."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-10"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="10"
-                    data-position="10"
-                    id="challenge-10-content"
-                  >
-                    My mom puts on my scarf.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-10-translation"
-                    data-original-text="My mom puts on my scarf."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-11"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="11"
-                    data-position="11"
-                    id="challenge-11-content"
-                  >
-                    My mom zippers my jacket.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-11-translation"
-                    data-original-text="My mom zippers my jacket."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-12"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="12"
-                    data-position="12"
-                    id="challenge-12-content"
-                  >
-                    My sister puts on her hat and mittens.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-12-translation"
-                    data-original-text="My sister puts on her hat and mittens."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-13"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="13"
-                    data-position="13"
-                    id="challenge-13-content"
-                  >
-                    My mom puts on her scarf.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-13-translation"
-                    data-original-text="My mom puts on her scarf."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-14"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="14"
-                    data-position="14"
-                    id="challenge-14-content"
-                  >
-                    My mom zippers her jacket.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-14-translation"
-                    data-original-text="My mom zippers her jacket."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-15"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="15"
-                    data-position="15"
-                    id="challenge-15-content"
-                  >
-                    My sister and I go outside.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-15-translation"
-                    data-original-text="My sister and I go outside."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-16"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="16"
-                    data-position="16"
-                    id="challenge-16-content"
-                  >
-                    We begin to make a snowman.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-16-translation"
-                    data-original-text="We begin to make a snowman."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-17"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="17"
-                    data-position="17"
-                    id="challenge-17-content"
-                  >
-                    My mom starts to shovel the snow.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-17-translation"
-                    data-original-text="My mom starts to shovel the snow."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-18"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="18"
-                    data-position="18"
-                    id="challenge-18-content"
-                  >
-                    My sister and I make snow angels.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-18-translation"
-                    data-original-text="My sister and I make snow angels."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-19"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="19"
-                    data-position="19"
-                    id="challenge-19-content"
-                  >
-                    My sister and I throw snowballs.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-19-translation"
-                    data-original-text="My sister and I throw snowballs."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-20"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="20"
-                    data-position="20"
-                    id="challenge-20-content"
-                  >
-                    It starts to snow again.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-20-translation"
-                    data-original-text="It starts to snow again."
-                  ></div>
-                </div>
-                <div className="mb-3">
-                  <button
-                    className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
-                    id="btn-play-21"
-                    style={{ lineHeight: 0 }}
-                  >
-                    play
-                  </button>
-                  <span
-                    className="transcript-text js-transcript-text"
-                    title="21"
-                    data-position="21"
-                    id="challenge-21-content"
-                  >
-                    We go inside for hot chocolate.
-                  </span>
-                  <div
-                    className="text-secondary js-translation d-none"
-                    id="challenge-21-translation"
-                    data-original-text="We go inside for hot chocolate."
-                  ></div>
-                </div>
+                {datas?.map((item) => {
+                  return (
+                    <div className="mb-3" key={item.id}>
+                      <button
+                        className="btn p-3 me-1 bi bi-play-circle fs-4 js-btn-play"
+                        id={`btn-play-${item.id}`}
+                        style={{ lineHeight: 0 }}
+                      >
+                        play
+                      </button>
+                      <span
+                        className="transcript-text js-transcript-text"
+                        title={`${item.id}`}
+                        data-position={`${item.id}`}
+                        id={`challenge-${item.id}-content`}
+                      >
+                        {item.content}
+                      </span>
+                      <div
+                        className="text-secondary js-translation d-none"
+                        id={`challenge-${item.id}-translation`}
+                        data-original-text={item.content}
+                      ></div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -703,15 +285,6 @@ export default function App() {
             </div>
           </div>
         </div>
-      </div>
-      <div className="mb-4">
-        <ins
-          className="adsbygoogle"
-          style={{ display: "block" }}
-          data-ad-format="autorelaxed"
-          data-ad-client="ca-pub-8891417675222163"
-          data-ad-slot="5897104875"
-        ></ins>
       </div>
     </main>
   );
