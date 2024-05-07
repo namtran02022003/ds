@@ -1,3 +1,11 @@
 {
-  "title": "Daily Languages Practice"
+  "title": "Daily Languages Practice",
+  "home": "Home",
+  "listening": "Listening",
+  "speaking": "Speaking",
+  "reading": "Reading",
+  "writing": "Writing",
+  "podcast": "Podcast",
+  "about": "About",
+  "helpUs":"Help Us"
 }
