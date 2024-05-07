@@ -1,3 +1,11 @@
 {
-  "title": "title ja"
+  "title": "title ja",
+  "home": "Home ja",
+  "listening": "Listening",
+  "speaking": "Speaking",
+  "reading": "Reading",
+  "writing": "Writing",
+  "podcast": "Podcast",
+  "about": "About",
+  "helpUs":"Help Us"
 }
