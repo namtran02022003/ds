@@ -1,5 +1,12 @@
 import { FaceBookIcon } from "@/assets/icons/FaceBookIcon";
+import { InstagramIcon } from "@/assets/icons/InstagramIcon";
+import { LinkedinIcon } from "@/assets/icons/LinkedinIcon";
+import { SettingIcon } from "@/assets/icons/SettingIcon";
 import ShareIcon from "@/assets/icons/ShareIcon";
+import { TiktokIcon } from "@/assets/icons/TiktokIcon";
+import { TwitterIcon } from "@/assets/icons/TwitterIcon";
+import { UserIcon } from "@/assets/icons/UserIcon";
+import { YoutubeIcon } from "@/assets/icons/YoutubeIcon";
 import i18next from "@/settings/localization/i18n";
 const Header = () => {
   return (
@@ -14,19 +21,19 @@ const Header = () => {
             <FaceBookIcon />
           </span>
           <span className="px-2">
-            <FaceBookIcon />
+            <InstagramIcon />
           </span>
           <span className="px-2">
-            <FaceBookIcon />
+            <TwitterIcon />
           </span>
           <span className="px-2">
-            <FaceBookIcon />
+            <YoutubeIcon />
           </span>
           <span className="px-2">
-            <FaceBookIcon />
+            <LinkedinIcon />
           </span>
           <span className="px-2">
-            <FaceBookIcon />
+            <TiktokIcon />
           </span>
         </div>
         <div className="flex ms-[72px] items-center">
@@ -34,10 +41,10 @@ const Header = () => {
             User Information
           </span>
           <span className="px-2">
-            <FaceBookIcon />
+            <UserIcon />
           </span>
           <span className="px-2">
-            <FaceBookIcon />
+            <SettingIcon />
           </span>
         </div>
       </div>
