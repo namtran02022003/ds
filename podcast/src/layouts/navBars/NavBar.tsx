@@ -7,31 +7,31 @@ export function NavBar() {
   const { t } = useTranslation();
   const LIST_MENU = [
     {
-      text: "home",
+      key: "nav_home",
       path: "/",
     },
     {
-      text: "listening",
+      key: "home_listening",
       path: "/listening",
     },
     {
-      text: "speaking",
+      key: "home_speaking",
       path: "/speaking",
     },
     {
-      text: "reading",
+      key: "home_reading",
       path: "/reading",
     },
     {
-      text: "writing",
+      key: "home_writing",
       path: "/writing",
     },
     {
-      text: "podcast",
+      key: "nav_podcast",
       path: "/podcast",
     },
     {
-      text: "about",
+      key: "nav_about",
       path: "/about",
     },
   ];
@@ -54,13 +54,13 @@ export function NavBar() {
               } px-2 text-[#174873] text-[20px] font-[400] leading-[24.2px]`;
             }}
           >
-            {t(link.text)}
+            {t(link.key)}
           </NavLink>
         ))}
       </div>
       <div className="flex items-center">
         <span className="px-2 text-[#174873] text-[20px] font-[400] leading-[24.2px]">
-          {t("helpUs")}
+          {t("nav_helpus")}
         </span>
         <SettingIcon />
       </div>
