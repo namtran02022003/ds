@@ -1,6 +1,5 @@
 import { HeadPhoneIcon } from "@/assets/icons/HeadPhoneIcon";
 import i18n from "@/settings/localization/i18n";
-import explore_more_english_img from "@/assets/imgs/explore_more_english.svg";
 const HomePage = () => {
   return (
     <div>
@@ -110,11 +109,7 @@ const HomePage = () => {
         <div className="px-20 mx-auto">
           <div className="grid grid-cols-3 gap-x-14">
             <div className="rounded-[20px] text-center border-[#0077B5] p-5 border bg-white">
-              <img
-                className="pt-10 pb-20"
-                src={explore_more_english_img}
-                alt="des"
-              />
+              <img className="pt-10 pb-20" src="/imgs/quizzes.svg" alt="des" />
               <p className="text-[20px] font-[700] leading-[24.2px]">Easy</p>
               <p className="leading-[14.52px] font-[400] text-[12px] py-2">
                 Listening for high-beginning ESL studemts
@@ -124,11 +119,7 @@ const HomePage = () => {
               </button>
             </div>
             <div className="rounded-[20px] text-center border-[#0077B5] p-5 border bg-white">
-              <img
-                className="pt-10 pb-20"
-                src={explore_more_english_img}
-                alt="des"
-              />
+              <img className="pt-10 pb-20" src="/imgs/quizzes.svg" alt="des" />
               <p className="text-[20px] font-[700] leading-[24.2px]">
                 Intermediate
               </p>
@@ -140,11 +131,7 @@ const HomePage = () => {
               </button>
             </div>
             <div className="rounded-[20px] text-center border-[#0077B5] p-5 border bg-white">
-              <img
-                className="pt-10 pb-20"
-                src={explore_more_english_img}
-                alt="des"
-              />
+              <img className="pt-10 pb-20" src="/imgs/quizzes.svg" alt="des" />
               <p className="text-[20px] font-[700] leading-[24.2px]">
                 Difficult
               </p>

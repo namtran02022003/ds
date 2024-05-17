@@ -238,13 +238,6 @@ const startApp : (e:RESPONSE_DATA_TYPE[])=> void = (e) => {
           'Translation select changed, new value: "'.concat(w.value, '"')
         );
         var e = w.value;
-        !(function (e, t) {
-          try {
-            window.localStorage.setItem("translationLanguageCode", t);
-          } catch (e) {
-            console.error("failed to save item to localStorage: " + e);
-          }
-        })(0, e),
           document.querySelectorAll(".js-translation").forEach(function (e) {
             e.classList.add("d-none");
           }),
