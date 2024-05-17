@@ -1,9 +1,8 @@
 import { AssemblyAI } from "assemblyai";
 import { useEffect, useState } from "react";
-import "./App.css";
 import { RESPONSE_DATA_TYPE } from "../types";
 import { startApp } from "../assets";
-export default function App() {
+export default function SpeechHighLight() {
   const client = new AssemblyAI({
     apiKey: "0406b3e1645d45fb876abaceee9a3ba5",
   });
