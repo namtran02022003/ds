@@ -182,7 +182,7 @@ export default function App() {
               </span>
             </div>
             <div className="mb-3">
-              <div className="border border-2 rounded p-2">
+              <div className="border-2 rounded p-2">
                 <div>
                   <audio
                     controls

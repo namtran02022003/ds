@@ -1,6 +1,6 @@
 import Layouts from "./layouts/index";
 import { Outlet } from "react-router-dom";
-import "./App.css";
+import "@/assets/styles/global.scss";
 export default function App() {
   return (
     <Layouts>

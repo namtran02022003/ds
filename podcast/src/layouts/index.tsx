@@ -1,13 +1,15 @@
 import React from "react";
 import Header from "./headers/header";
 import { NavBar } from "./navBars/NavBar";
-import slideImg from "@/assets/imgs/slideTop.svg";
+import FloatingSidebar from "./FloatingSidebar";
+
 const Layouts = ({ children }: { children: React.ReactElement }) => {
   return (
     <>
       <Header />
       <NavBar />
-      <img src={slideImg} alt="slide" />
+      <img src="./imgs/slideTop.svg" alt="slide" />
+      <FloatingSidebar />
       {children}
     </>
   );
