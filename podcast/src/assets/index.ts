@@ -1,249 +1,219 @@
 import { RESPONSE_DATA_TYPE } from "../types";
 
-const startApp : (e:RESPONSE_DATA_TYPE[])=> void = (e) => {
+const startApp = (responseData:RESPONSE_DATA_TYPE[]) => {
   console.info("Begin app listen & read");
- 
 
-  let t = document.getElementById("js-audio");
-  let n = document.getElementById("audio-error-message");
-  let o = document.querySelectorAll(".js-transcript-text");
-  let a = {};
-  let s = {};
-  let i = {};
-  let c = "bi-pause-circle";
-  let l = "bi-play-circle";
-  let r = document.querySelector(".js-top-text");
-  let d = document.querySelector(".js-top-translation");
-  let u = document.querySelector(".js-btn-prev");
-  let m = document.querySelector(".js-btn-next");
-  let f = document.querySelector(".js-show-transcript");
-  let g = document.querySelector(".js-transcript");
-  let v = document.querySelector(".js-current-position");
-  let L = null;
-  let b = null;
-  let y = -1;
-  let E = !1;
+  // Element references
+  const audioElement = document.getElementById("js-audio");
+  const errorMessage = document.getElementById("audio-error-message");
+  const transcriptTexts = document.querySelectorAll(".js-transcript-text");
+  const topTextElement = document.querySelector(".js-top-text");
+  const topTranslationElement = document.querySelector(".js-top-translation");
+  const prevButton = document.querySelector(".js-btn-prev");
+  const nextButton = document.querySelector(".js-btn-next");
+  const showTranscriptButton = document.querySelector(".js-show-transcript");
+  const transcriptElement = document.querySelector(".js-transcript");
+  const currentPositionElement = document.querySelector(".js-current-position");
 
-  function p() {
-    if (L) {
-      var e = L.parentElement.querySelector(".js-translation"),
-        t = e.querySelector(".js-btn-edit-trans");
-      if (((d.innerHTML = e.textContent), t)) {
-        var n = d.parentElement.querySelector(".js-btn-edit-trans");
-        [
-          "data-translation-id",
-          "data-challenge-id",
-          "data-add-suggestion-url",
-        ].forEach(function (e) {
-          n.setAttribute(e, t.getAttribute(e));
-        }),
-          n.classList.remove("d-none");
+  // Constants
+  const pauseIconClass = "bi-pause-circle";
+  const playIconClass = "bi-play-circle";
+
+  // Variables
+  let activeTranscript = null;
+  let activePlayButton = null;
+  let currentPosition = -1;
+  let isTopTextClicked = false;
+  let positionToTimeStartMap = {};
+  let transcriptElements = {};
+  let playButtonElements = {};
+
+  // Function to update the top translation element
+  function updateTopTranslation() {
+    if (activeTranscript) {
+      const translationElement = activeTranscript.parentElement.querySelector(".js-translation");
+      const editButton = translationElement.querySelector(".js-btn-edit-trans");
+
+      topTranslationElement.innerHTML = translationElement.textContent;
+
+      if (editButton) {
+        const topEditButton = topTranslationElement.parentElement.querySelector(".js-btn-edit-trans");
+        ["data-translation-id", "data-challenge-id", "data-add-suggestion-url"].forEach(attr => {
+          topEditButton.setAttribute(attr, editButton.getAttribute(attr));
+        });
+        topEditButton.classList.remove("d-none");
       }
     }
   }
 
-  function h() {
-    t.blur(),
-      t.paused && t.play(),
-      y < e.length &&
-        ((t.currentTime = y < 1 ? i[1] - 0.4 : i[y + 1] - 0.4), t.play());
+  // Function to handle next button click
+  function handleNextButtonClick() {
+    audioElement.blur();
+    if (audioElement.paused) audioElement.play();
+    if (currentPosition < responseData.length) {
+      audioElement.currentTime = currentPosition < 1 ? positionToTimeStartMap[1] - 0.4 : positionToTimeStartMap[currentPosition + 1] - 0.4;
+      audioElement.play();
+    }
   }
 
-  function S() {
-    t.blur(),
-      t.paused && t.play(),
-      y > 1 && ((t.currentTime = i[y - 1] - 0.4), t.play());
+  // Function to handle previous button click
+  function handlePrevButtonClick() {
+    audioElement.blur();
+    if (audioElement.paused) audioElement.play();
+    if (currentPosition > 1) {
+      audioElement.currentTime = positionToTimeStartMap[currentPosition - 1] - 0.4;
+      audioElement.play();
+    }
   }
-  e.forEach(function (e) {
-    i[e.position] = e.timeStart;
-  }),
-    o.forEach(function (e) {
-      var n = parseInt(e.getAttribute("data-position")),
-        o = document.getElementById("btn-play-".concat(n));
-      (a[n] = e),
-        (s[n] = o),
-        o.addEventListener("click", function () {
-          console.info("btn play #".concat(n, " is clicked")),
-            o.classList.contains(c)
-              ? (t.pause(), o.classList.add(l), o.classList.remove(c))
-              : ((t.currentTime = i[n] - 0.4),
-                t.play(),
-                o.classList.add(c),
-                o.classList.remove(l));
-        }),
-        o.addEventListener("focus", function () {
-          o.blur();
-        });
-    }),
-    t.addEventListener("timeupdate", function () {
-      for (var n = t.currentTime + 0.5, o = 0; o < e.length; o++) {
-        var i = e[o],
-          d = i.position,
-          u = i.timeStart,
-          m = i.timeEnd;
-        if (n >= u && n < m) {
-          if (y === d) return;
-          return (
-            (y = d),
-            L && L.classList.remove("active"),
-            b && (b.classList.add(l), b.classList.remove(c)),
-            (L = a[d]),
-            (b = s[d]),
-            L &&
-              (L.classList.add("active"),
-              L && (r.innerHTML = L.innerHTML),
-              y > 0 && (v.innerHTML = y),
-              p()),
-            void (b && (b.classList.add(c), b.classList.remove(l)))
-          );
-        }
+
+  // Initialize position to time start map
+  responseData.forEach(data => {
+    positionToTimeStartMap[data.position] = data.timeStart;
+  });
+
+  // Initialize transcript and play button elements
+  transcriptTexts.forEach(text => {
+    const position = parseInt(text.getAttribute("data-position"));
+    const playButton = document.getElementById(`btn-play-${position}`);
+
+    transcriptElements[position] = text;
+    playButtonElements[position] = playButton;
+
+    playButton.addEventListener("click",async () => {
+      console.info(`btn play #${position} is clicked`);
+      if (playButton.classList.contains(pauseIconClass)) {
+       await audioElement.pause();
+        playButton.classList.add(playIconClass);
+        playButton.classList.remove(pauseIconClass);
+      } else {
+        audioElement.currentTime = positionToTimeStartMap[position] - 0.4;
+     await audioElement.play();
+        playButton.classList.add(pauseIconClass);
+        playButton.classList.remove(playIconClass);
       }
-    }),
-    t.addEventListener("loadstart", function () {
-      console.log("starting to load audio");
-    }),
-    t.addEventListener("ended", function () {
-      L && (L.classList.remove("active"), (L = null)), (y = -1);
-    }),
-    t.addEventListener("pause", function () {
-      b && (b.classList.add(l), b.classList.remove(c));
-    }),
-    t.addEventListener("play", function () {
-      b && (b.classList.add(c), b.classList.remove(l));
-    }),
-    t.addEventListener("loadeddata", function () {
-      n.classList.add("d-none"), console.info("Audio loaded");
-    }),
-    t.addEventListener("canplay", function () {
-      console.info("Audio can be played");
-    }),
-    t.addEventListener("error", function () {
-      n.classList.remove("d-none"), console.error("Error when loading audio");
-    }),
-    t.load(),
-    document.addEventListener("keydown", function (e) {
-      document.activeElement === document.body &&
-        ("Space" === e.code
-          ? (t.blur(), e.preventDefault(), t.paused ? t.play() : t.pause())
-          : "ArrowLeft" === e.code
-          ? S()
-          : "ArrowRight" === e.code && h());
-    }),
-    u.addEventListener("click", function (e) {
-      S(), e.currentTarget.blur();
-    }),
-    m.addEventListener("click", function (e) {
-      h(), e.currentTarget.blur();
-    }),
-    r.addEventListener("click", function () {
-      !E && t.paused && (t.play(), (r.innerHTML = "..."), (E = !0));
-    }),
-    f.addEventListener("click", function () {
-      g.classList.remove("d-none"), f.classList.add("d-none");
     });
-  var w = document.getElementById("select-translation");
-  if (w) {
-    var T = function (e) {
-        j ||
-          ((j = !0),
-          w.setAttribute("disabled", "disabled"),
-          x.classList.remove("d-none"),
-          console.info(
-            'Starting to fetch translation with code "'.concat(e, '"')
-          ),
-          fetch(
-            window.getLessonTranslationsUrl +
-              "?languageCode=".concat(e, "&translateIfNotExisted=1")
-          )
-            .then(function (e) {
-              if (e.ok)
-                return (
-                  console.info("Successfully fetched translation"), e.json()
-                );
-            })
-            .then(function (e) {
-              var n, o, a, s;
-              Object.keys(e).forEach(function (t) {
-                var n = e[t],
-                  o = n.id,
-                  a = n.text,
-                  s = n.addSuggestionUrl,
-                  i = document.getElementById(
-                    "challenge-".concat(t, "-translation")
-                  ),
-                  c =
-                    '\n            <button\n             class="btn btn-sm text-muted p-0 ms-1 me-2 fs-6 js-btn-edit-trans" \n             style="line-height: 0"\n             data-translation-id="'
-                      .concat(o, '" \n             data-challenge-id="')
-                      .concat(t, '"\n             data-add-suggestion-url="')
-                      .concat(
-                        s,
-                        '"\n             title="Edit this translation"\n            >\n              <i class="bi bi-pencil-square"></i>\n            </button>\n          '
-                      );
-                i.classList.remove("d-none"),
-                  (i.innerHTML = c + a),
-                  p(),
-                  d.parentElement.classList.remove("d-none");
-              }),
-                (n = document.querySelectorAll(".js-btn-edit-trans")),
-                (o = document.getElementById("edit-translation-modal")),
-                (s = document.getElementById("translation-origin-text")),
-                n.forEach(function (e) {
-                  e.addEventListener("click", function () {
-                    console.log("edit btn clicked"), t.pause();
-                    var n = e.getAttribute("data-challenge-id"),
-                      o = document.getElementById(
-                        "challenge-".concat(n, "-content")
-                      ),
-                      i = document.getElementById(
-                        "challenge-".concat(n, "-translation")
-                      );
-                    (s.innerHTML = o.innerText),
-                      (A.value = i.innerText.trim()),
-                      k.classList.add("d-none"),
-                      q.classList.add("d-none"),
-                      (document.body.style.height = "auto"),
-                      a.show();
-                  });
-                }),
-                o.addEventListener("shown.bs.modal", function () {
-                  A.focus();
-                });
-            })
-            .catch(function (e) {
-              console.error("Failed to fetch translation. Error: " + e);
-            })
-            .finally(function () {
-              (j = !1),
-                w.removeAttribute("disabled"),
-                x.classList.add("d-none");
-            }));
-      },
-      j = !1,
-      A = document.getElementById("edit-translation-input"),
-      k = document.getElementById("submit-success-message"),
-      q = document.getElementById("submit-error-message"),
-      x = document.getElementById("translation-loading-icon");
-    var M = (function () {
-      try {
-        return window.localStorage.getItem("translationLanguageCode");
-      } catch (e) {
-        console.error("Error when getting from localStorage: " + e);
+
+    playButton.addEventListener("focus", () => {
+      playButton.blur();
+    });
+  });
+
+  // Audio element event listeners
+  audioElement.addEventListener("timeupdate", () => {
+    const currentTime = audioElement.currentTime + 0.5;
+
+    for (let i = 0; i < responseData.length; i++) {
+      const data = responseData[i];
+      if (currentTime >= data.timeStart && currentTime < data.timeEnd) {
+        if (currentPosition === data.position) return;
+
+        currentPosition = data.position;
+        if (activeTranscript) activeTranscript.classList.remove("active");
+        if (activePlayButton) {
+          activePlayButton.classList.add(playIconClass);
+          activePlayButton.classList.remove(pauseIconClass);
+        }
+
+        activeTranscript = transcriptElements[data.position];
+        activePlayButton = playButtonElements[data.position];
+
+        if (activeTranscript) {
+          activeTranscript.classList.add("active");
+          topTextElement.innerHTML = activeTranscript.innerHTML;
+          if (currentPosition > 0) currentPositionElement.innerHTML = currentPosition;
+          updateTopTranslation();
+        }
+
+        if (activePlayButton) {
+          activePlayButton.classList.add(pauseIconClass);
+          activePlayButton.classList.remove(playIconClass);
+        }
+
+        break;
       }
-      return null;
-    })();
-    console.info('saved translation language code: "'.concat(M, '"')),
-      M && M.length > 0 && ((w.value = M), T(M)),
-      w.addEventListener("change", function () {
-        console.info(
-          'Translation select changed, new value: "'.concat(w.value, '"')
-        );
-        var e = w.value;
-          document.querySelectorAll(".js-translation").forEach(function (e) {
-            e.classList.add("d-none");
-          }),
-          e.length > 0 ? T(e) : d.parentElement.classList.add("d-none");
-      });
-  }
+    }
+  });
+
+  audioElement.addEventListener("loadstart", () => {
+    console.log("starting to load audio");
+  });
+
+  audioElement.addEventListener("ended", () => {
+    if (activeTranscript) activeTranscript.classList.remove("active");
+    activeTranscript = null;
+    currentPosition = -1;
+  });
+
+  audioElement.addEventListener("pause", () => {
+    if (activePlayButton) {
+      activePlayButton.classList.add(playIconClass);
+      activePlayButton.classList.remove(pauseIconClass);
+    }
+  });
+
+  audioElement.addEventListener("play", () => {
+    if (activePlayButton) {
+      activePlayButton.classList.add(pauseIconClass);
+      activePlayButton.classList.remove(playIconClass);
+    }
+  });
+
+  audioElement.addEventListener("loadeddata", () => {
+    errorMessage.classList.add("d-none");
+    console.info("Audio loaded");
+  });
+
+  audioElement.addEventListener("canplay", () => {
+    console.info("Audio can be played");
+  });
+
+  audioElement.addEventListener("error", () => {
+    errorMessage.classList.remove("d-none");
+    console.error("Error when loading audio");
+  });
+
+  audioElement.load();
+
+  // Keyboard event listener
+  document.addEventListener("keydown", (e) => {
+    if (document.activeElement === document.body) {
+      if (e.code === "Space") {
+        audioElement.blur();
+        e.preventDefault();
+        audioElement.paused ? audioElement.play() : audioElement.pause();
+      } else if (e.code === "ArrowLeft") {
+        handlePrevButtonClick();
+      } else if (e.code === "ArrowRight") {
+        handleNextButtonClick();
+      }
+    }
+  });
+
+  // Button event listeners
+  prevButton.addEventListener("click", (e) => {
+    handlePrevButtonClick();
+    e.currentTarget.blur();
+  });
+
+  nextButton.addEventListener("click", (e) => {
+    handleNextButtonClick();
+    e.currentTarget.blur();
+  });
+
+  topTextElement.addEventListener("click", () => {
+    if (!isTopTextClicked && audioElement.paused) {
+      audioElement.play();
+      topTextElement.innerHTML = "...";
+      isTopTextClicked = true;
+    }
+  });
+
+  showTranscriptButton.addEventListener("click", () => {
+    transcriptElement.classList.remove("hidden");
+    showTranscriptButton.classList.add("hidden");
+  });
+
   console.log("Initiated app listen & read.");
 };
+
 export { startApp };
