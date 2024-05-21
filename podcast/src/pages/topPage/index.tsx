@@ -1,11 +1,21 @@
 import { HeadPhoneIcon } from "@/assets/icons/HeadPhoneIcon";
+import { setUserName } from "@/redux/common";
+import { RootState } from "@/redux/stores";
 import i18n from "@/settings/localization/i18n";
 import { showErrorMessage } from "@/utils/Toast";
+import { useDispatch, useSelector } from "react-redux";
 const HomePage = () => {
+  const userName = useSelector((state: RootState) => state?.common?.userName);
+  const dispatch = useDispatch();
+
+  console.log(userName);
   return (
     <div>
-      <button onClick={() => showErrorMessage({ content: "sdsdsdsd" })}>
-        click
+      <button onClick={() => showErrorMessage({ content: "Content toast" })}>
+        Demo toast
+      </button>
+      <button onClick={() => dispatch(setUserName({ name: "new name" }))}>
+        Demo redux
       </button>
       <div className="top text-center text-[48px] leading-[58.09px] text-[#2F669A] my-5">
         <h2 className="font-[400]">{i18n.t("home_boosting_english_skills")}</h2>
