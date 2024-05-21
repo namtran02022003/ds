@@ -1,8 +1,12 @@
 import { HeadPhoneIcon } from "@/assets/icons/HeadPhoneIcon";
 import i18n from "@/settings/localization/i18n";
+import { showErrorMessage } from "@/utils/Toast";
 const HomePage = () => {
   return (
     <div>
+      <button onClick={() => showErrorMessage({ content: "sdsdsdsd" })}>
+        click
+      </button>
       <div className="top text-center text-[48px] leading-[58.09px] text-[#2F669A] my-5">
         <h2 className="font-[400]">{i18n.t("home_boosting_english_skills")}</h2>
         <h2 className="font-[700]">{i18n.t("home_text_free")}</h2>
