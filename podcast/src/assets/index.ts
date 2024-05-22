@@ -1,4 +1,4 @@
-import { RESPONSE_DATA_TYPE } from "../types";
+import { RESPONSE_DATA_TYPE } from "@/models";
 
 const startApp = (responseData: RESPONSE_DATA_TYPE[]) => {
   console.info("Begin app listen & read");
