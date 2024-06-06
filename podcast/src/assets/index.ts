@@ -1,10 +1,11 @@
 import { RESPONSE_DATA_TYPE } from "@/models";
 
-const startApp = (responseData: RESPONSE_DATA_TYPE[]) => {
+const startApp = (responseData: RESPONSE_DATA_TYPE[],el:HTMLAudioElement) => {
   console.info("Begin app listen & read");
 
   // Element references
-  const audioElement = document.getElementById("js-audio") as HTMLAudioElement;
+  const audioElement = el
+  console.log("real________",audioElement)
   const errorMessage = document.getElementById("audio-error-message");
   const transcriptTexts = document.querySelectorAll(".js-transcript-text");
   const topTextElement = document.querySelector(".js-top-text") as HTMLElement;

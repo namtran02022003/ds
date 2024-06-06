@@ -1,51 +1,62 @@
-import { AssemblyAI } from "assemblyai";
+// import { AssemblyAI } from "assemblyai";
 import { useEffect, useState } from "react";
-import { RESPONSE_DATA_TYPE } from "../types";
 import { startApp } from "../assets";
+import { RESPONSE_DATA_TYPE } from "@/models";
+import Waveform from "./WaveSurfer";
+import { MOCK_DATA_HIGHLIGHT_TEXT } from "@/assets/mock";
 export default function SpeechHighLight() {
-  const client = new AssemblyAI({
-    apiKey: "0406b3e1645d45fb876abaceee9a3ba5",
-  });
+  const [audioElement, setAudioElement] = useState<any>();
+  // const client = new AssemblyAI({
+  //   apiKey: "0406b3e1645d45fb876abaceee9a3ba5",
+  // });
 
-  const audioUrl =
-    "https://storage.googleapis.com/aai-web-samples/5_common_sports_injuries.mp3";
+  // const audioUrl =
+  //   "https://storage.googleapis.com/aai-web-samples/5_common_sports_injuries.mp3";
 
-  const params = {
-    audio: audioUrl,
-    speaker_labels: true,
-  };
+  // const params = {
+  //   audio: audioUrl,
+  //   speaker_labels: true,
+  // };
 
-  const [datas, setDatas] = useState<RESPONSE_DATA_TYPE[]>([]);
+  const [datas, _setDatas] = useState<RESPONSE_DATA_TYPE[]>(
+    MOCK_DATA_HIGHLIGHT_TEXT
+  );
+  // useEffect(() => {
+  //   const run = async () => {
+  //     const transcript = await client.transcripts.transcribe(params);
+  //     const value: RESPONSE_DATA_TYPE[] = [];
+  //     let index = 1;
+  //     for (const utterance of transcript.utterances!) {
+  //       value.push({
+  //         position: index,
+  //         content: utterance.text,
+  //         id: index,
+  //         timeStart: +utterance.start
+  //           .toString()
+  //           .replace(/\B(?=(\d{3})+(?!\d))/g, "."),
+  //         timeEnd: +utterance.end
+  //           .toString()
+  //           .replace(/\B(?=(\d{3})+(?!\d))/g, "."),
+  //       });
+  //       ++index;
+  //     }
+  //     setDatas(value);
+  //   };
+  //   run();
+  // }, []);
+  // Start js with audio element
   useEffect(() => {
-    const run = async () => {
-      const transcript = await client.transcripts.transcribe(params);
-      const value: RESPONSE_DATA_TYPE[] = [];
-      let index = 1;
-      for (const utterance of transcript.utterances!) {
-        value.push({
-          position: index,
-          content: utterance.text,
-          id: index,
-          timeStart: +utterance.start
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, "."),
-          timeEnd: +utterance.end
-            .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, "."),
-        });
-        ++index;
-      }
-      setDatas(value);
+    if (audioElement) {
       setTimeout(() => {
-        startApp(value);
+        startApp(datas, audioElement);
       }, 1000);
-    };
-    run();
-  }, []);
+    }
+  }, [audioElement]);
+  console.log("run high");
   return !datas.length ? (
     <></>
   ) : (
-    <main className="container">
+    <main className="container mx-auto">
       <div className="message"></div>
       <h1 className="fs-5 mb-3">1. First snowfall (Listen and Read)</h1>
       <div className="p-3 border rounded shadow bg-body-tertiary mb-4">
@@ -54,18 +65,7 @@ export default function SpeechHighLight() {
             <div className="mb-3">
               <div className="border-2 rounded p-2">
                 <div>
-                  <audio
-                    controls
-                    className="w-100"
-                    preload="auto"
-                    id="js-audio"
-                  >
-                    <source
-                      src="https://storage.googleapis.com/aai-web-samples/5_common_sports_injuries.mp3"
-                      type="audio/mpeg"
-                    />
-                    Your browser does not support the audio element.
-                  </audio>
+                  <Waveform setAudioElement={setAudioElement} />
                   <div className="text-danger hidden" id="audio-error-message">
                     Error! Cannot load audio!
                     <br />
@@ -74,16 +74,10 @@ export default function SpeechHighLight() {
                 </div>
                 <div className="text-center">
                   <div className="d-inline-flex align-items-center">
-                    <button className="btn js-btn-prev">
-                      <i className="bi bi-arrow-left">Prev</i>
-                    </button>
                     <span className="mx-3">
                       <span className="js-current-position">1</span> /{" "}
                       {datas.length}
                     </span>
-                    <button className="btn js-btn-next">
-                      <i className="bi bi-arrow-right">Next</i>
-                    </button>
                   </div>
                 </div>
                 <div

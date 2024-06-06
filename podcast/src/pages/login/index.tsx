@@ -8,7 +8,6 @@ const Login = () => {
   });
 
   const auth: any = useAuth();
-  console.log(auth);
 
   const handleSubmitEvent = (e: any) => {
     e.preventDefault();
@@ -25,7 +24,6 @@ const Login = () => {
       [name]: value,
     }));
   };
-  console.log(input);
   return (
     <form onSubmit={handleSubmitEvent}>
       <div className="form_control">

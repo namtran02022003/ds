@@ -4,7 +4,7 @@ Clientapp
 
 ## Description
 
-The English Learning Hub is an interactive web platform designed to assist users in improving their English language skills. Whether you're a beginner looking to build a strong foundation or an advanced learner striving for fluency, our platform offers a comprehensive range of tools and resources to support your language learning journey.
+The Clientapp is an interactive web platform designed to assist users in improving their English language skills. Whether you're a beginner looking to build a strong foundation or an advanced learner striving for fluency, our platform offers a comprehensive range of tools and resources to support your language learning journey.
 
 ## Requirements
 

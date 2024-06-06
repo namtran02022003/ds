@@ -1,4 +1,5 @@
 import { HeadPhoneIcon } from "@/assets/icons/HeadPhoneIcon";
+import TranScript from "@/components/transcript.tsx";
 import { setUserName } from "@/redux/common";
 import { RootState } from "@/redux/stores";
 import i18n from "@/settings/localization/i18n";
@@ -17,6 +18,7 @@ const HomePage = () => {
       <button onClick={() => dispatch(setUserName({ name: "new name" }))}>
         Demo redux
       </button>
+      <TranScript />
       <div className="top text-center text-[48px] leading-[58.09px] text-[#2F669A] my-5">
         <h2 className="font-[400]">{i18n.t("home_boosting_english_skills")}</h2>
         <h2 className="font-[700]">{i18n.t("home_text_free")}</h2>
